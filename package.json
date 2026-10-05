@@ -1,0 +1,22 @@
+{
+  "name": "eduriskvision",
+  "version": "2.4.0",
+  "description": "EduRiskVision — Predictive Learning Analytics Framework for Faculty Decision Support",
+  "main": "index.html",
+  "scripts": {
+    "dev": "node scripts/serve.js",
+    "start": "node scripts/serve.js",
+    "serve": "node scripts/serve.js",
+    "build": "node scripts/prepare_web_data.js",
+    "prepare-data": "node scripts/prepare_web_data.js"
+  },
+  "keywords": [
+    "predictive-analytics",
+    "learning-analytics",
+    "student-risk",
+    "machine-learning",
+    "decision-support"
+  ],
+  "author": "Raja S (ME - CSE)",
+  "license": "MIT"
+}

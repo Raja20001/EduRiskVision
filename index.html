@@ -1,0 +1,797 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EduRiskVision — Predictive Learning Analytics Framework</title>
+  <meta name="description" content="AI-Powered Predictive Learning Analytics Framework for Early Student Risk Identification and Faculty Decision Support. Developed for ME-CSE Data Analytics.">
+  <meta name="author" content="Raja S | ME - CSE">
+  <meta name="theme-color" content="#070D10">
+
+  <!-- OpenGraph / Social Metadata -->
+  <meta property="og:title" content="EduRiskVision — Predictive Learning Analytics Framework">
+  <meta property="og:description" content="Early identification of academically at-risk students using Machine Learning and interactive learning analytics.">
+  <meta property="og:type" content="website">
+
+  <!-- Google Fonts: Outfit, Inter, JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Outfit:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+  <!-- RemixIcon Icons CDN -->
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet">
+
+  <!-- Chart.js 4.4 CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <!-- Core Styles -->
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- Ambient Animated Gradient Glow -->
+  <div class="ambient-bg" aria-hidden="true">
+    <div class="ambient-blob-1"></div>
+    <div class="ambient-blob-2"></div>
+  </div>
+
+  <div class="app-container">
+
+    <!-- ============================================================
+         Sidebar Navigation
+         ============================================================ -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <a href="#" class="brand-logo">
+          <div class="brand-icon">
+            <i class="ri-radar-fill"></i>
+          </div>
+          <div class="brand-text">
+            <div class="brand-title">EduRisk<span class="highlight">Vision</span></div>
+            <div class="brand-sub">Analytics Platform</div>
+          </div>
+        </a>
+      </div>
+
+      <nav class="sidebar-nav">
+        <div class="nav-section-label">Main Navigation</div>
+
+        <div class="nav-item active" data-tab="overview">
+          <i class="ri-dashboard-3-line"></i>
+          <span class="nav-label">Overview</span>
+        </div>
+
+        <div class="nav-item" data-tab="students">
+          <i class="ri-team-line"></i>
+          <span class="nav-label">Student Register</span>
+        </div>
+
+        <div class="nav-item" data-tab="analytics">
+          <i class="ri-line-chart-line"></i>
+          <span class="nav-label">Deep Analytics</span>
+        </div>
+
+        <div class="nav-item" data-tab="models">
+          <i class="ri-brain-line"></i>
+          <span class="nav-label">Model Results</span>
+        </div>
+
+        <div class="nav-section-label">Decision Support</div>
+
+        <div class="nav-item" data-tab="predictor">
+          <i class="ri-magic-line"></i>
+          <span class="nav-label">Risk Predictor</span>
+        </div>
+
+        <div class="nav-item" data-tab="alerts">
+          <i class="ri-alarm-warning-line"></i>
+          <span class="nav-label">At-Risk Alerts</span>
+          <span class="nav-badge" id="sidebarAlertBadge">62</span>
+        </div>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="author-card">
+          <div class="author-avatar">RS</div>
+          <div class="author-info">
+            <div class="author-name">Raja S</div>
+            <div class="author-role">ME – CSE | CP23A13</div>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- ============================================================
+         Main Dashboard Wrapper
+         ============================================================ -->
+    <div class="main-wrapper">
+
+      <!-- Top Sticky Navigation Bar -->
+      <header class="top-navbar">
+        <div class="header-left">
+          <button class="menu-toggle-btn" id="mobileMenuToggle" aria-label="Toggle Navigation">
+            <i class="ri-menu-2-line"></i>
+          </button>
+          <div class="breadcrumbs">
+            <span>EduRiskVision</span>
+            <i class="ri-arrow-right-s-line"></i>
+            <span class="current" id="currentTabBreadcrumb">Overview</span>
+          </div>
+          <div class="academic-pill">
+            <span class="pulse-dot"></span>
+            Data Analytics Project (CP23A13)
+          </div>
+        </div>
+
+        <div class="header-right">
+          <button class="btn btn-outline" id="exportCsvBtn" title="Export current student data as CSV">
+            <i class="ri-file-download-line"></i> Export CSV
+          </button>
+          <button class="btn btn-outline" id="printReportBtn" title="Print academic report">
+            <i class="ri-printer-line"></i> Print Report
+          </button>
+          <button class="btn-icon" id="themeToggleBtn" title="Toggle Dark/Light Mode">
+            <i class="ri-sun-line"></i>
+          </button>
+        </div>
+      </header>
+
+      <!-- Global Filter Bar -->
+      <section class="global-filter-bar" aria-label="Global Data Filters">
+        <div class="filter-group">
+          <span class="filter-label"><i class="ri-filter-3-line"></i> Global Filters:</span>
+
+          <select class="filter-select" id="deptFilter" aria-label="Filter by Department">
+            <option value="All">All Departments</option>
+            <option value="CIVIL">CIVIL</option>
+            <option value="CSE">CSE</option>
+            <option value="ECE">ECE</option>
+            <option value="IT">IT</option>
+            <option value="MECH">MECH</option>
+          </select>
+
+          <select class="filter-select" id="semFilter" aria-label="Filter by Semester">
+            <option value="All">All Semesters</option>
+            <option value="1">Semester 1</option>
+            <option value="2">Semester 2</option>
+            <option value="3">Semester 3</option>
+            <option value="4">Semester 4</option>
+            <option value="5">Semester 5</option>
+            <option value="6">Semester 6</option>
+            <option value="7">Semester 7</option>
+            <option value="8">Semester 8</option>
+          </select>
+
+          <select class="filter-select" id="riskFilter" aria-label="Filter by Risk Tier">
+            <option value="All">All Risk Tiers</option>
+            <option value="Low_Risk">Low Risk (Safe)</option>
+            <option value="Medium_Risk">Medium Risk (Moderate)</option>
+            <option value="High_Risk">High Risk (Critical)</option>
+          </select>
+
+          <button class="filter-reset-btn" id="resetFiltersBtn">
+            <i class="ri-restart-line"></i> Reset Filters
+          </button>
+        </div>
+
+        <div class="filter-actions">
+          <div class="filter-counter-pill">
+            Filtered Cohort: <strong id="filteredCount">500</strong> students
+          </div>
+        </div>
+      </section>
+
+      <!-- Main Content Area -->
+      <main class="content-area">
+
+        <!-- KPI Value Cards Grid (Always Reactive to Filters) -->
+        <section class="kpi-grid">
+          <div class="kpi-card kpi-total">
+            <div class="kpi-header">
+              <span class="kpi-title">Total Enrolled</span>
+              <div class="kpi-icon-box"><i class="ri-user-star-line"></i></div>
+            </div>
+            <div class="kpi-value-row">
+              <span class="kpi-value" id="kpiTotal">500</span>
+              <span class="kpi-percent">Active Cohort</span>
+            </div>
+            <div class="kpi-subtitle">Monitored undergraduate cohort</div>
+          </div>
+
+          <div class="kpi-card kpi-low">
+            <div class="kpi-header">
+              <span class="kpi-title">Low Risk (Safe)</span>
+              <div class="kpi-icon-box"><i class="ri-checkbox-circle-line"></i></div>
+            </div>
+            <div class="kpi-value-row">
+              <span class="kpi-value" id="kpiLow">292</span>
+              <span class="kpi-percent pill-low" id="kpiLowPct">58.4%</span>
+            </div>
+            <div class="kpi-subtitle">Score ≥ 65 | Strong academic standing</div>
+          </div>
+
+          <div class="kpi-card kpi-med">
+            <div class="kpi-header">
+              <span class="kpi-title">Medium Risk</span>
+              <div class="kpi-icon-box"><i class="ri-alert-line"></i></div>
+            </div>
+            <div class="kpi-value-row">
+              <span class="kpi-value" id="kpiMed">146</span>
+              <span class="kpi-percent pill-med" id="kpiMedPct">29.2%</span>
+            </div>
+            <div class="kpi-subtitle">Score 40–64 | Proactive advisory needed</div>
+          </div>
+
+          <div class="kpi-card kpi-high">
+            <div class="kpi-header">
+              <span class="kpi-title">High Risk (Critical)</span>
+              <div class="kpi-icon-box"><i class="ri-alarm-warning-line"></i></div>
+            </div>
+            <div class="kpi-value-row">
+              <span class="kpi-value" id="kpiHigh">62</span>
+              <span class="kpi-percent pill-high" id="kpiHighPct">12.4%</span>
+            </div>
+            <div class="kpi-subtitle">Score &lt; 40 | Urgent faculty intervention</div>
+          </div>
+        </section>
+
+        <!-- ============================================================
+             TAB 1: OVERVIEW PANE
+             ============================================================ -->
+        <section class="tab-pane active" id="tab-overview">
+          <div class="section-header">
+            <div>
+              <h1 class="section-title"><i class="ri-dashboard-3-line"></i> Executive Analytics Overview</h1>
+              <p class="section-desc">Macro-level cohort risk distribution, department benchmarks, and multidimensional indicators.</p>
+            </div>
+          </div>
+
+          <div class="dashboard-grid">
+            <!-- Risk Donut Chart -->
+            <div class="glass-card col-6">
+              <div class="card-header">
+                <div class="card-title"><i class="ri-pie-chart-2-line"></i> Risk Category Distribution</div>
+                <span class="card-badge">Cohort Ratio</span>
+              </div>
+              <div class="chart-container">
+                <canvas id="chartRiskDist"></canvas>
+              </div>
+            </div>
+
+            <!-- Dept Risk Stacked Bar -->
+            <div class="glass-card col-6">
+              <div class="card-header">
+                <div class="card-title"><i class="ri-bar-chart-grouped-line"></i> Department-wise Risk Breakdown</div>
+                <span class="card-badge">Cross-Branch</span>
+              </div>
+              <div class="chart-container">
+                <canvas id="chartDeptRisk"></canvas>
+              </div>
+            </div>
+
+            <!-- Attendance vs Marks Scatter -->
+            <div class="glass-card col-8">
+              <div class="card-header">
+                <div class="card-title"><i class="ri-bubble-chart-line"></i> Attendance vs Internal Marks Correlation</div>
+                <span class="card-badge">Scatter Analysis</span>
+              </div>
+              <div class="chart-container">
+                <canvas id="chartScatter"></canvas>
+              </div>
+            </div>
+
+            <!-- Top Risk Indicators / Faculty Summary -->
+            <div class="glass-card col-4">
+              <div class="card-header">
+                <div class="card-title"><i class="ri-guide-line"></i> Key Risk Indicators</div>
+                <span class="card-badge">Framework</span>
+              </div>
+              <div style="display:flex; flex-direction:column; gap: 1rem; margin-top: 0.5rem;">
+                <div style="background: rgba(0, 191, 165, 0.08); padding: 0.85rem; border-radius: 8px; border-left: 3px solid #00BFA5;">
+                  <div style="font-size: 0.8rem; font-weight:700; color: #00BFA5; text-transform:uppercase;">Attendance Threshold</div>
+                  <div style="font-size: 0.85rem; color: var(--text-secondary); margin-top: 2px;">
+                    Students with &lt;75% attendance exhibit a <strong>3.4x higher probability</strong> of landing in High Risk.
+                  </div>
+                </div>
+
+                <div style="background: rgba(239, 68, 68, 0.08); padding: 0.85rem; border-radius: 8px; border-left: 3px solid #EF4444;">
+                  <div style="font-size: 0.8rem; font-weight:700; color: #EF4444; text-transform:uppercase;">Active Backlogs</div>
+                  <div style="font-size: 0.85rem; color: var(--text-secondary); margin-top: 2px;">
+                    Each active backlog increases academic vulnerability by <strong>4.5 composite index points</strong>.
+                  </div>
+                </div>
+
+                <div style="background: rgba(245, 158, 11, 0.08); padding: 0.85rem; border-radius: 8px; border-left: 3px solid #F59E0B;">
+                  <div style="font-size: 0.8rem; font-weight:700; color: #F59E0B; text-transform:uppercase;">LMS Engagement Gap</div>
+                  <div style="font-size: 0.85rem; color: var(--text-secondary); margin-top: 2px;">
+                    Portal engagement scores &lt;50 correlate with a <strong>68% assignment incompletion</strong> rate.
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ============================================================
+             TAB 2: STUDENT REGISTER PANE
+             ============================================================ -->
+        <section class="tab-pane" id="tab-students">
+          <div class="section-header">
+            <div>
+              <h1 class="section-title"><i class="ri-team-line"></i> Student Risk Register</h1>
+              <p class="section-desc">Searchable academic directory with instant sorting, multi-tier filtering, and diagnostic modals.</p>
+            </div>
+          </div>
+
+          <div class="glass-card">
+            <div class="table-controls">
+              <div class="search-box">
+                <i class="ri-search-line"></i>
+                <input type="text" class="search-input" id="studentSearchInput" placeholder="Search by Student ID, Department...">
+              </div>
+              <div id="tableShowingInfo" style="font-size: 0.85rem; color: var(--text-muted);">
+                Showing 1–15 of 500 students
+              </div>
+            </div>
+
+            <div class="table-responsive">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th data-sort="student_id">Student ID <i class="ri-arrow-up-down-line sort-icon"></i></th>
+                    <th data-sort="department">Dept <i class="ri-arrow-up-down-line sort-icon"></i></th>
+                    <th data-sort="semester">Sem <i class="ri-arrow-up-down-line sort-icon"></i></th>
+                    <th data-sort="attendance">Attendance <i class="ri-arrow-up-down-line sort-icon"></i></th>
+                    <th data-sort="internal_marks">Marks <i class="ri-arrow-up-down-line sort-icon"></i></th>
+                    <th data-sort="prev_gpa">GPA <i class="ri-arrow-up-down-line sort-icon"></i></th>
+                    <th data-sort="backlogs">Backlogs <i class="ri-arrow-up-down-line sort-icon"></i></th>
+                    <th data-sort="risk_score">Risk Tier & Score <i class="ri-arrow-up-down-line sort-icon"></i></th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody id="studentTableBody">
+                  <!-- Populated dynamically via app.js -->
+                </tbody>
+              </table>
+            </div>
+
+            <div class="pagination-wrapper">
+              <div style="font-size: 0.82rem; color: var(--text-muted);">
+                15 records per page
+              </div>
+              <div class="pagination-btns" id="paginationControls">
+                <!-- Pagination buttons generated dynamically -->
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ============================================================
+             TAB 3: DEEP ANALYTICS PANE
+             ============================================================ -->
+        <section class="tab-pane" id="tab-analytics">
+          <div class="section-header">
+            <div>
+              <h1 class="section-title"><i class="ri-line-chart-line"></i> Exploratory Data Analytics</h1>
+              <p class="section-desc">Distribution profiles across risk categories and academic feature correlation matrix.</p>
+            </div>
+          </div>
+
+          <div class="dashboard-grid">
+            <!-- Attendance by Risk -->
+            <div class="glass-card col-6">
+              <div class="card-header">
+                <div class="card-title"><i class="ri-user-follow-line"></i> Attendance Distribution by Risk Tier</div>
+                <span class="card-badge">Benchmark</span>
+              </div>
+              <div class="chart-container">
+                <canvas id="chartAttByRisk"></canvas>
+              </div>
+            </div>
+
+            <!-- Marks by Risk -->
+            <div class="glass-card col-6">
+              <div class="card-header">
+                <div class="card-title"><i class="ri-file-list-3-line"></i> Internal Marks Distribution by Risk Tier</div>
+                <span class="card-badge">Benchmark</span>
+              </div>
+              <div class="chart-container">
+                <canvas id="chartMarksByRisk"></canvas>
+              </div>
+            </div>
+
+            <!-- LMS Engagement vs Risk -->
+            <div class="glass-card col-6">
+              <div class="card-header">
+                <div class="card-title"><i class="ri-computer-line"></i> LMS Digital Engagement vs Risk</div>
+                <span class="card-badge">Portal Index</span>
+              </div>
+              <div class="chart-container">
+                <canvas id="chartLmsByRisk"></canvas>
+              </div>
+            </div>
+
+            <!-- GPA Distribution vs Risk -->
+            <div class="glass-card col-6">
+              <div class="card-header">
+                <div class="card-title"><i class="ri-graduation-cap-line"></i> Previous Semester GPA Distribution</div>
+                <span class="card-badge">Academic History</span>
+              </div>
+              <div class="chart-container">
+                <canvas id="chartGpaByRisk"></canvas>
+              </div>
+            </div>
+
+            <!-- Pearson Correlation Heatmap -->
+            <div class="glass-card col-12">
+              <div class="card-header">
+                <div class="card-title"><i class="ri-grid-line"></i> Pearson Feature Correlation Matrix</div>
+                <span class="card-badge">Correlation (r)</span>
+              </div>
+              <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 1rem;">
+                Pairwise linear correlation coefficients between academic metrics and final risk classification.
+              </p>
+              <div id="heatmapContainer"></div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ============================================================
+             TAB 4: MODEL RESULTS PANE
+             ============================================================ -->
+        <section class="tab-pane" id="tab-models">
+          <div class="section-header">
+            <div>
+              <h1 class="section-title"><i class="ri-brain-line"></i> Machine Learning Model Benchmarks</h1>
+              <p class="section-desc">Performance metrics comparing Logistic Regression, Decision Tree, and Random Forest classifier.</p>
+            </div>
+          </div>
+
+          <!-- 3 Model Info Cards -->
+          <div class="model-cards-grid">
+            <div class="model-card">
+              <div class="model-title"><i class="ri-line-chart-line" style="color:#00695C;"></i> Logistic Regression</div>
+              <p style="font-size:0.8rem; color:var(--text-muted);">Parametric baseline model for binary and multinomial risk estimation.</p>
+              <div class="model-metrics-row">
+                <div class="model-metric-item">
+                  <span class="model-metric-label">Accuracy</span>
+                  <span class="model-metric-val">78.4%</span>
+                </div>
+                <div class="model-metric-item">
+                  <span class="model-metric-label">Cohen's Kappa</span>
+                  <span class="model-metric-val" style="color:var(--text-primary);">0.582</span>
+                </div>
+              </div>
+              <div style="font-size: 0.78rem; color: var(--text-secondary);">
+                Precision: <strong>77.1%</strong> | Recall: <strong>76.5%</strong>
+              </div>
+            </div>
+
+            <div class="model-card">
+              <div class="model-title"><i class="ri-node-tree" style="color:#00897B;"></i> Decision Tree (CART)</div>
+              <p style="font-size:0.8rem; color:var(--text-muted);">Single recursive partitioning tree providing white-box split explainability.</p>
+              <div class="model-metrics-row">
+                <div class="model-metric-item">
+                  <span class="model-metric-label">Accuracy</span>
+                  <span class="model-metric-val">81.2%</span>
+                </div>
+                <div class="model-metric-item">
+                  <span class="model-metric-label">Cohen's Kappa</span>
+                  <span class="model-metric-val" style="color:var(--text-primary);">0.635</span>
+                </div>
+              </div>
+              <div style="font-size: 0.78rem; color: var(--text-secondary);">
+                Precision: <strong>80.4%</strong> | Recall: <strong>79.8%</strong>
+              </div>
+            </div>
+
+            <div class="model-card featured">
+              <span class="model-best-badge">★ Champion Model</span>
+              <div class="model-title"><i class="ri-git-branch-line" style="color:var(--accent-teal);"></i> Random Forest</div>
+              <p style="font-size:0.8rem; color:var(--text-muted);">Ensemble of 200 de-correlated decision trees with 5-fold cross-validation.</p>
+              <div class="model-metrics-row">
+                <div class="model-metric-item">
+                  <span class="model-metric-label">Accuracy</span>
+                  <span class="model-metric-val">89.1%</span>
+                </div>
+                <div class="model-metric-item">
+                  <span class="model-metric-label">Cohen's Kappa</span>
+                  <span class="model-metric-val" style="color:#00E5FF;">0.774</span>
+                </div>
+              </div>
+              <div style="font-size: 0.78rem; color: var(--text-secondary);">
+                Precision: <strong>88.6%</strong> | Recall: <strong>88.2%</strong> (F1: 88.4%)
+              </div>
+            </div>
+          </div>
+
+          <div class="dashboard-grid">
+            <!-- Model Comparison Bar Chart -->
+            <div class="glass-card col-6">
+              <div class="card-header">
+                <div class="card-title"><i class="ri-bar-chart-fill"></i> Model Accuracy Comparison</div>
+                <span class="card-badge">CV Benchmark</span>
+              </div>
+              <div class="chart-container">
+                <canvas id="chartModelComparison"></canvas>
+              </div>
+            </div>
+
+            <!-- Feature Importance -->
+            <div class="glass-card col-6">
+              <div class="card-header">
+                <div class="card-title"><i class="ri-equalizer-line"></i> Random Forest Feature Importance</div>
+                <span class="card-badge">Mean Decrease Gini</span>
+              </div>
+              <div class="chart-container">
+                <canvas id="chartFeatureImportance"></canvas>
+              </div>
+            </div>
+
+            <!-- Confusion Matrix -->
+            <div class="glass-card col-12">
+              <div class="card-header">
+                <div class="card-title"><i class="ri-checkbox-multiple-line"></i> Random Forest Confusion Matrix (Holdout Test Set)</div>
+                <span class="card-badge">Multi-Class Evaluation</span>
+              </div>
+              <div id="confusionMatrixContainer" style="padding: 1rem 0;"></div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ============================================================
+             TAB 5: LIVE RISK PREDICTOR PANE
+             ============================================================ -->
+        <section class="tab-pane" id="tab-predictor">
+          <div class="section-header">
+            <div>
+              <h1 class="section-title"><i class="ri-magic-line"></i> Live Risk Predictor & What-If Simulator</h1>
+              <p class="section-desc">Interactive simulation tool enabling faculty to test hypothetical academic interventions in real time.</p>
+            </div>
+          </div>
+
+          <div class="predictor-layout">
+            <!-- Left: Sliders Form -->
+            <div class="glass-card">
+              <div class="card-header">
+                <div class="card-title"><i class="ri-sliders-line"></i> Academic Profile Inputs</div>
+                <span class="card-badge">Live Reactivity</span>
+              </div>
+
+              <div class="form-group">
+                <div class="form-label-row">
+                  <label class="form-label"><i class="ri-user-follow-line" style="color:var(--accent-teal);"></i> Attendance Rate</label>
+                  <span class="slider-val-bubble" id="val_att">75%</span>
+                </div>
+                <input type="range" class="range-slider" id="p_att" min="20" max="100" value="75">
+              </div>
+
+              <div class="form-group">
+                <div class="form-label-row">
+                  <label class="form-label"><i class="ri-file-text-line" style="color:var(--accent-teal);"></i> Internal Marks</label>
+                  <span class="slider-val-bubble" id="val_marks">60%</span>
+                </div>
+                <input type="range" class="range-slider" id="p_marks" min="10" max="100" value="60">
+              </div>
+
+              <div class="form-group">
+                <div class="form-label-row">
+                  <label class="form-label"><i class="ri-task-line" style="color:var(--accent-teal);"></i> Assignment Completion</label>
+                  <span class="slider-val-bubble" id="val_assign">70%</span>
+                </div>
+                <input type="range" class="range-slider" id="p_assign" min="0" max="100" value="70">
+              </div>
+
+              <div class="form-group">
+                <div class="form-label-row">
+                  <label class="form-label"><i class="ri-computer-line" style="color:var(--accent-teal);"></i> LMS Engagement Score</label>
+                  <span class="slider-val-bubble" id="val_lms">60</span>
+                </div>
+                <input type="range" class="range-slider" id="p_lms" min="0" max="100" value="60">
+              </div>
+
+              <div class="form-group">
+                <div class="form-label-row">
+                  <label class="form-label"><i class="ri-graduation-cap-line" style="color:var(--accent-teal);"></i> Previous Semester GPA</label>
+                  <span class="slider-val-bubble" id="val_gpa">6.5</span>
+                </div>
+                <input type="range" class="range-slider" id="p_gpa" min="2.0" max="10.0" step="0.1" value="6.5">
+              </div>
+
+              <div class="form-group">
+                <div class="form-label-row">
+                  <label class="form-label"><i class="ri-error-warning-line" style="color:var(--risk-high);"></i> Active Backlogs</label>
+                  <span class="slider-val-bubble" id="val_backlogs">0</span>
+                </div>
+                <input type="range" class="range-slider" id="p_backlogs" min="0" max="10" step="1" value="0">
+              </div>
+
+              <div class="form-group">
+                <div class="form-label-row">
+                  <label class="form-label"><i class="ri-flask-line" style="color:var(--accent-teal);"></i> Lab Performance</label>
+                  <span class="slider-val-bubble" id="val_lab">65%</span>
+                </div>
+                <input type="range" class="range-slider" id="p_lab" min="20" max="100" value="65">
+              </div>
+            </div>
+
+            <!-- Right: Real-time Prediction Output -->
+            <div class="prediction-result-card">
+              <div style="font-size: 0.85rem; color: var(--accent-teal); font-weight:700; text-transform:uppercase; letter-spacing:0.08em;">
+                Random Forest Inference Engine
+              </div>
+
+              <div class="score-gauge-wrapper">
+                <div class="gauge-score-display" id="predScoreVal">68</div>
+                <div class="gauge-score-sub">Composite Academic Index (0–100)</div>
+                <div class="predicted-tier-badge" id="predTierBadge" style="color:#10B981; background:rgba(16,185,129,0.15); border:1px solid rgba(16,185,129,0.3);">
+                  Low Risk (Safe)
+                </div>
+              </div>
+
+              <div class="probabilities-box">
+                <div style="font-size: 0.8rem; font-weight:700; color:var(--text-muted); text-transform:uppercase; margin-bottom: 0.75rem;">
+                  Ensemble Probability Breakdown:
+                </div>
+
+                <div class="prob-item">
+                  <div class="prob-label-row">
+                    <span style="color:var(--risk-low);">Low Risk Probability</span>
+                    <span id="probLowPct">72%</span>
+                  </div>
+                  <div class="prob-bar-track">
+                    <div class="prob-bar-fill" id="probLowFill" style="width:72%; background:var(--risk-low);"></div>
+                  </div>
+                </div>
+
+                <div class="prob-item">
+                  <div class="prob-label-row">
+                    <span style="color:var(--risk-med);">Medium Risk Probability</span>
+                    <span id="probMedPct">22%</span>
+                  </div>
+                  <div class="prob-bar-track">
+                    <div class="prob-bar-fill" id="probMedFill" style="width:22%; background:var(--risk-med);"></div>
+                  </div>
+                </div>
+
+                <div class="prob-item">
+                  <div class="prob-label-row">
+                    <span style="color:var(--risk-high);">High Risk Probability</span>
+                    <span id="probHighPct">6%</span>
+                  </div>
+                  <div class="prob-bar-track">
+                    <div class="prob-bar-fill" id="probHighFill" style="width:6%; background:var(--risk-high);"></div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="intervention-box">
+                <div class="intervention-title">
+                  <i class="ri-lightbulb-flash-line"></i> Recommended Faculty Action Plan:
+                </div>
+                <ul class="intervention-list" id="interventionList">
+                  <!-- Injected dynamically -->
+                </ul>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ============================================================
+             TAB 6: AT-RISK ALERTS PANE
+             ============================================================ -->
+        <section class="tab-pane" id="tab-alerts">
+          <div class="section-header">
+            <div>
+              <h1 class="section-title"><i class="ri-alarm-warning-line"></i> Early Warning & Alert Triage</h1>
+              <p class="section-desc">Priority triage center for students requiring immediate academic counseling and intervention.</p>
+            </div>
+          </div>
+
+          <!-- Alert Metric Cards -->
+          <div class="kpi-grid">
+            <div class="kpi-card kpi-high">
+              <div class="kpi-header">
+                <span class="kpi-title">Critical High Risk</span>
+                <div class="kpi-icon-box"><i class="ri-error-warning-fill"></i></div>
+              </div>
+              <div class="kpi-value-row">
+                <span class="kpi-value" id="alertHighCount">62</span>
+                <span class="kpi-percent pill-high">Action Required</span>
+              </div>
+              <div class="kpi-subtitle">Scores below 40 | Urgent proctor meeting</div>
+            </div>
+
+            <div class="kpi-card kpi-med">
+              <div class="kpi-header">
+                <span class="kpi-title">Attendance &lt; 75%</span>
+                <div class="kpi-icon-box"><i class="ri-user-unfollow-line"></i></div>
+              </div>
+              <div class="kpi-value-row">
+                <span class="kpi-value" id="alertLowAttCount">142</span>
+                <span class="kpi-percent pill-med">Warning Stage</span>
+              </div>
+              <div class="kpi-subtitle">Below university mandatory requirement</div>
+            </div>
+
+            <div class="kpi-card kpi-med">
+              <div class="kpi-header">
+                <span class="kpi-title">Active Backlogs</span>
+                <div class="kpi-icon-box"><i class="ri-file-damage-line"></i></div>
+              </div>
+              <div class="kpi-value-row">
+                <span class="kpi-value" id="alertBacklogCount">118</span>
+                <span class="kpi-percent pill-med">Coaching Needed</span>
+              </div>
+              <div class="kpi-subtitle">Students with 1 or more pending subjects</div>
+            </div>
+          </div>
+
+          <div class="glass-card">
+            <div class="card-header">
+              <div class="card-title" style="color:var(--risk-high);">
+                <i class="ri-alarm-warning-fill"></i> Critical High-Risk Triage Register
+              </div>
+              <span class="card-badge" style="background:var(--risk-high-bg); color:var(--risk-high); border-color:var(--risk-high-border);">
+                Highest Priority
+              </span>
+            </div>
+
+            <div class="table-responsive">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Student ID</th>
+                    <th>Department</th>
+                    <th>Semester</th>
+                    <th>Attendance</th>
+                    <th>Marks</th>
+                    <th>Backlogs</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody id="alertHighTableBody">
+                  <!-- Dynamically populated -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+      </main>
+    </div>
+  </div>
+
+  <!-- ============================================================
+       Student Diagnostic 360° Modal
+       ============================================================ -->
+  <div class="modal-overlay" id="studentModal" role="dialog" aria-modal="true" aria-labelledby="modalStudentId">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <div>
+          <div style="font-size:0.75rem; color:var(--accent-teal); font-weight:700; text-transform:uppercase;">
+            Student Academic Profile & Diagnosis
+          </div>
+          <h3 id="modalStudentId" style="font-size:1.35rem; margin-top:2px;">STU0001 — CSE (Sem 4)</h3>
+        </div>
+        <button class="modal-close-btn" id="modalCloseBtn" aria-label="Close Modal">
+          <i class="ri-close-line"></i>
+        </button>
+      </div>
+
+      <div class="modal-body" id="modalBodyContent">
+        <!-- Injected dynamically via app.js -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <!-- Application Logic Scripts -->
+  <script src="js/data.js"></script>
+  <script src="js/predictor.js"></script>
+  <script src="js/charts.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

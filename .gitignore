@@ -1,0 +1,22 @@
+# R artifacts
+.Rhistory
+.RData
+.RDataTmp
+.Rproj.user
+
+# Node & dependencies
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Vercel & Deployments
+.vercel
+dist/
+
+# OS metadata
+.DS_Store
+Thumbs.db
+
+# Accidental folder
+"{data,models,dashboard,utils,reports}"/
